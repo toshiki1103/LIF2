@@ -20,7 +20,7 @@
         <button onclick="saveData()">記録を保存する</button>
         <!--ボタンがクリックされた時にsaveData関数を実行　()を付けてはじめてこの関数を実行するになる -->
         <button onclick="clearData()" class="delete-btn">全削除</button>
-        <button class="share">コーチに結果をシェア</button>
+        <button onclick="mada()"  class="share">コーチに結果をシェア</button>
     </div>
 
     <h2>過去の記録</h2>
@@ -39,6 +39,10 @@
             //これないと保存するボタンを押すまで記録が画面に表示されない
         };                      
         
+        function mada(){
+            alert("すいません、シェアのところはまだ実装できていません！");
+        }
+
         function displayRecords() {
             const listElement = document.getElementById("recordList");
             //html内 id="recordList"を探して取得して、listElement変数に保存して後で使う（参照リンク）

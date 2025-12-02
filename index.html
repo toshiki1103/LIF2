@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>リフティング記録帳</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>⚽リフティング記録⚽</h1>
+
+    <div class="input-area">
+        <label>日付:</label><br>
+        <input type="date" id="inputDate"><br>
+        <label>回数:</label><br>
+        <input type="number" id="inputCount" placeholder="例: 50"><br>
+        <!--placeholderでHTML の input 要素の属性で、ユーザーが入力する前に入力フィールドに表示されるヒントテキスト -->        
+        
+        <button onclick="saveData()">記録を保存する</button>
+        <!--ボタンがクリックされた時にsaveData関数を実行　()を付けてはじめてこの関数を実行するになる -->
+        <button onclick="clearData()" class="delete-btn">全削除</button>
+        <button class="share">コーチに結果をシェア</button>
+    </div>
+
+    <h2>過去の記録</h2>
+
+    <ul id="recordList"> </ul>
+
+    <h2>今のあなたの順位は（最高記録）</h2>
+    <p class="juni">5位/18人中</p> 
+    <script>
+        // --- JavaScript ---
+
+        window.onload = function() { 
+            //window.onloadはページが完全に読み込まれたらこの中身を実行する
+            displayRecords();
+            //保存されている過去の記録をリストに表示する関数。ページ開いたら記録を表示
+            //これないと保存するボタンを押すまで記録が画面に表示されない
+        };                      
+        
+        function displayRecords() {
+            const listElement = document.getElementById("recordList");
+            //html内 id="recordList"を探して取得して、listElement変数に保存して後で使う（参照リンク）
+            // //→ul id="recordList"に対するリモコンなので、これで操作する事で元のHTMLを変更出来る
+            listElement.innerHTML = "";
+            //リストの中身を全て削除。この関数が複数回実行されるときに前回の記録が残ったままになるのを防ぐ
+            let currentRecords = JSON.parse(localStorage.getItem("soccerAppFiles")) || [];
+            //lsoccerAppFilesというキー名でローカルストレージに保存された文字列をオブジェクトに戻して、
+            // currentRecordsで操作できるようにしてる
+
+
+            //保存するときの話
+            // ❌ こうするとダメ
+            //localStorage.setItem("soccerAppFiles", currentRecords);  // 文字列に変換されず正しく保存されない
+
+            //localStorage.setItem("record", JSON.stringify(newRecord));  // OK
+            // → '{"date":"2025-01-15","count":5}' という文字列で保存される
+            currentRecords.forEach(function(record) {
+                const li = document.createElement("li"); //HTMLで新しくli要素を作る、それを変数に入れる
+                li.textContent = `${record.date} の記録 : ${record.count} 回`;
+                //recordオブジェクトのdateという値を取り出して表示
+                listElement.prepend(li);
+            });
+        }
+            //localStorageは文字列しか保存できない道具。javascriptはオブジェクトで扱いたい
+            //オブジェクトはいくつかの関連情報をセットでまとめた箱。バラバラの情報に名前をつけてまとめたもの
+            // 保存するとき
+            //JSON.stringify(currentRecords)  // オブジェクト・配列 → 文字列に変換して保存
+            // 取得するとき
+            //JSON.parse(localStorage.getItem("soccerAppFiles"))  // 文字列 → オブジェクト・配列に変換
+       
+            //forEach文(配列の数だけ自動的に回して１つずつ渡してくれる便利機能)
+            //var array = [配列データ];
+            //array.forEach( コールバック関数 )
+            //一般的な使い方は配列.forEach（処理）のように配列データに対してforEachを実行
+            //forEach文は配列データの値１つずつに対してコールバック関数に記述した処理を実行できる
+
+
+        function saveData() {
+            const date = document.getElementById("inputDate").value;
+        //document.getElementByid("inputDate")でhtmlのid="inputDate"と指定されている要素を探し取得しdateに格納
+        //document=ページ全体、getElementById＝IDで要素を探すメソッド、("")探している要素のID
+        //.value を指定することで「入力された値」だけを取り出している
+            const count = document.getElementById("inputCount").value;
+
+            if (date === "" || count === "") {
+                alert("日付と回数を入力してください！");
+                return;
+            }
+            //保存する前に必ず値が入っているか確認する。空の項目が出ないように
+            //===なのは、 値と型の両方を比較。===を使うと本当に何も入力されていない状態かどうかを確認
+            // || →または
+
+            const newRecord = { date: date, count: count };
+            //一つのデータとして関連情報をまとめる
+            //オブジェクトを作成している。課題はテーブルにすることで文字列で保存していた
+            let currentRecords = JSON.parse(localStorage.getItem("soccerAppFiles")) || [];
+            //soccerAppFilesは「変数」ではなく、
+            // localStorageのキー名（文字列）＝localStorageで保存・取得するときの名前。
+            //soccerAppFilesという名前で保存されたデータを要求。
+            //JSON.parse()は文字列をJavascriptが使える形に変換する関数
+            //localStorageには文字列しか保存できない決まり。なのでJSON(オブジェクト)形式で管理するのがベスト
+            // || [];→もしデータがなかったら、空の箱（配列）を用意する。取り出した結果をcurrentRecordsに保存して後で使う
+            currentRecords.push(newRecord);
+            //currentRecords = 今までの記録の配列 .push()は配列の最後に新しい要素を追加
+            localStorage.setItem("soccerAppFiles", JSON.stringify(currentRecords));
+
+            displayRecords();
+            alert("保存しました！");
+        }
+
+       
+            function clearData() {
+            if(confirm("本当に全ての記録を消しますか？")) {
+                localStorage.removeItem("soccerAppFiles");
+                displayRecords();
+            }
+        }
+    </script>
+</body>
+</html>

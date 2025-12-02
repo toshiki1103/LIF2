@@ -1,0 +1,64 @@
+/* 簡単なデザイン（CSS） */
+body {
+    font-family: sans-serif;
+    background-color: #f0f8ff; /* 薄い青 */
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+h1 { 
+    color: #006400; /* 芝生 */
+}
+
+.input-area {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+input, button {
+    padding: 10px;
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+button {
+    background-color: #006400;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover { 
+    opacity: 0.8; 
+}
+
+/* 削除ボタン*/
+.delete-btn {
+    background-color: #d9534f;
+}
+
+.share {
+    background-color: #523dbf;
+}
+/* リスト */
+ul { 
+    list-style-type: none; 
+    padding: 0; 
+}
+
+li {
+    background: white;
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.juni{
+    font-size: large;
+
+}
